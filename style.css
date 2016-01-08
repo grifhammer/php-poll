@@ -1,0 +1,16 @@
+body{
+    text-align: center;
+}
+
+#selection-wrap{
+    overflow: hidden;
+}
+
+.vote-item{
+    width: 50%;
+    float: left;
+}
+
+img{
+    width: 750px;
+}
