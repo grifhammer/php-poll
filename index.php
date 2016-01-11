@@ -1,7 +1,28 @@
 <?php
     session_start();
-    include 'inc/db_connect.php'
+    include 'inc/db_connect.php';
 
+    $query = "SELECT * FROM teams";
+    $result = mysql_query($query);
+
+    while($row = mysql_fetch_array($result)){
+        $rows[] = $row;
+    }
+    $rand = rand (0, count($rows)-1);
+    $rand2 = $rand;
+    while($rand == $rand2){
+        $rand2 = rand(0, count($rows)-1);
+    }
+    $team1 = $rows[$rand]['name'];
+    $team1_pic = $rows[$rand]['image'];
+
+    $team2 = $rows[$rand2]['name'];
+    $team2_pic = $rows[$rand2]['image'];
+
+
+    // print $team1;
+    // print $team2;
+    // exit;
     // Select statement ... get a random match from teams
     // Check to see if it has been voted on
     // If they have, get another
@@ -37,18 +58,18 @@
             <div id="vote-all"></div>
             <div class="vote-item">
                 <div class="img-wrap">
-                    <img src="images/og.jpg-large">
+                    <img src="images/<?php print $team1_pic; ?>">
                 </div>
-                <button class="team-vote btn btn-lg" team="<?php print team1; ?>" opp="<?php print team2;?>"><?php print team1;?></button>
+                <button class="team-vote btn btn-lg" team="<?php print $team1; ?>" opp="<?php print $team2;?>"><?php print $team1; ?></button>
                 <div class="item-info">
                     <h3>50% of the Vote</h3>
                 </div>
             </div>
             <div class="vote-item">
                 <div class="img-wrap">
-                    <img src="images/eg.jpg-large">
+                    <img src="images/<?php print $team2_pic; ?>">
                 </div>
-                <button class="team-vote btn btn-lg" team="<?php print team2; ?>" opp="<?php print team1;?>"><?php print team2;?></button>
+                <button class="team-vote btn btn-lg" team="<?php print $team2; ?>" opp="<?php print $team1;?>"><?php print $team2;?></button>
                 <div class="item-info">
                     <h3>50% of the Vote</h3>
                 </div>
