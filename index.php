@@ -18,11 +18,13 @@
 
     $team2 = $rows[$rand2]['name'];
     $team2_pic = $rows[$rand2]['image'];
+    
+
+    $query = "SELECT * FROM matchups WHERE (team1 = '".$team1."' AND team2 = '".$team2."') OR (team1 ='".$team2."' AND team2 ='".$team1."')";
+    $result = mysql_query($query);
 
 
-    // print $team1;
-    // print $team2;
-    // exit;
+
     // Select statement ... get a random match from teams
     // Check to see if it has been voted on
     // If they have, get another
