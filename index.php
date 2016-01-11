@@ -1,29 +1,65 @@
 <?php
     session_start();
     include 'inc/db_connect.php';
+    
+    $idcookiename = "dota2uid";
 
-    $result = DB::query("SELECT * FROM teams");
 
-    $rows = $result;
-    $rand = rand (0, count($rows)-1);
-    $rand2 = $rand;
-    while($rand == $rand2){
-        $rand2 = rand(0, count($rows)-1);
+    if( !$_COOKIE[$idcookiename] ) {
+        $newid = uniqid();
+        setcookie($idcookiename, $newid);
+        $_COOKIE[$idcookiename] = $newid;
     }
-    $team1 = $rows[$rand]['name'];
-    $team1_pic = $rows[$rand]['image'];
+    $user_id = $_COOKIE[$idcookiename];
 
-    $team2 = $rows[$rand2]['name'];
-    $team2_pic = $rows[$rand2]['image'];
+    function get_teams(){
+
+        $allteams = DB::query("SELECT * FROM teams");
+
+        $rand = rand (0, count($allteams)-1);
+        $rand2 = $rand;
+        while($rand == $rand2){
+            $rand2 = rand(0, count($allteams)-1);
+        }
+        $team1 = $allteams[$rand];
+        $team2 = $allteams[$rand2];
+
+        $selected_teams[0] = $team1;
+        $selected_teams[1] = $team2;
+        return $selected_teams;
+    }
+
+    function get_match_id($team1, $team2){
+
+        $result = DB::query("SELECT * FROM matchups WHERE (team1 = %s AND team2 = %s) OR (team1 = %s AND team2 = %s)",$team1,$team2,$team2,$team1);
+
+        if(count($result) == 1){
+            $matchup = $result[0];
+        }
+        $match_id = $matchup['id'];
+        return $match_id;
+    }
+
+    $returned_teams = get_teams();
+    $returned_match = get_match_id($returned_teams[0]['name'], $returned_teams[1]['name']);
+    $result = DB::query("SELECT * FROM votes WHERE id=%i AND user=%s", $returned_match, $user_id);
+    print $returned_match.' ';
+    while(count($result) > 0 ){
+        $returned_teams = get_teams();
+        $returned_match = get_match_id($returned_teams[0]['name'], $returned_teams[1]['name']);
+        $result = DB::query("SELECT * FROM votes WHERE id=%i AND user=%s", $returned_match, $user_id);
+
+        print $returned_match;
+    }
+
+    $team1 = $returned_teams[0]['name'];
+    $team2 = $returned_teams[1]['name'];
+    $team1_pic = $returned_teams[0]['image'];
+
+    $team2_pic = $returned_teams[1]['image'];
     
 
-    $result = DB::query("SELECT * FROM matchups WHERE (team1 = %s AND team2 = %s) OR (team1 = %s AND team2 = %s)",$team1,$team2,$team2,$team1);
-
-    if(count($result) == 1){
-        $matchup = $result[0];
-    }
-    $matchId = $matchup['id'];
-    print $matchId;
+    
     // Select statement ... get a random match from teams
     // Check to see if it has been voted on
     // If they have, get another
