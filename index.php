@@ -2,12 +2,9 @@
     session_start();
     include 'inc/db_connect.php';
 
-    $query = "SELECT * FROM teams";
-    $result = mysql_query($query);
+    $result = DB::query("SELECT * FROM teams");
 
-    while($row = mysql_fetch_array($result)){
-        $rows[] = $row;
-    }
+    $rows = $result;
     $rand = rand (0, count($rows)-1);
     $rand2 = $rand;
     while($rand == $rand2){
@@ -20,11 +17,13 @@
     $team2_pic = $rows[$rand2]['image'];
     
 
-    $query = "SELECT * FROM matchups WHERE (team1 = '".$team1."' AND team2 = '".$team2."') OR (team1 ='".$team2."' AND team2 ='".$team1."')";
-    $result = mysql_query($query);
+    $result = DB::query("SELECT * FROM matchups WHERE (team1 = %s AND team2 = %s) OR (team1 = %s AND team2 = %s)",$team1,$team2,$team2,$team1);
 
-
-
+    if(count($result) == 1){
+        $matchup = $result[0];
+    }
+    $matchId = $matchup['id'];
+    print $matchId;
     // Select statement ... get a random match from teams
     // Check to see if it has been voted on
     // If they have, get another
