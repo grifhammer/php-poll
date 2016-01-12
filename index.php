@@ -42,20 +42,20 @@
 
     $returned_teams = get_teams();
     $returned_match = get_match_id($returned_teams[0]['name'], $returned_teams[1]['name']);
-    $result = DB::query("SELECT * FROM votes WHERE id=%i AND user=%s", $returned_match, $user_id);
+    $result = DB::query("SELECT * FROM votes WHERE mid=%i AND user=%s", $returned_match, $user_id);
     print $returned_match.' ';
     while(count($result) > 0 ){
         $returned_teams = get_teams();
         $returned_match = get_match_id($returned_teams[0]['name'], $returned_teams[1]['name']);
-        $result = DB::query("SELECT * FROM votes WHERE id=%i AND user=%s", $returned_match, $user_id);
+        $result = DB::query("SELECT * FROM votes WHERE mid=%i AND user=%s", $returned_match, $user_id);
 
         print $returned_match;
     }
 
     $team1 = $returned_teams[0]['name'];
     $team2 = $returned_teams[1]['name'];
-    $team1_pic = $returned_teams[0]['image'];
 
+    $team1_pic = $returned_teams[0]['image'];
     $team2_pic = $returned_teams[1]['image'];
     
 
@@ -97,26 +97,26 @@
                 <div class="img-wrap">
                     <img src="images/<?php print $team1_pic; ?>">
                 </div>
-                <button class="team-vote btn btn-lg" team="<?php print $team1; ?>" opp="<?php print $team2;?>"><?php print $team1; ?></button>
+                <button class="team-vote btn btn-lg btn-primary" team="<?php print $team1; ?>" opp="<?php print $team2;?>" mid="<?php print $returned_match; ?>"><?php print $team1; ?></button>
                 <div class="item-info">
-                    <h3>50% of the Vote</h3>
+                    <h3><?php print 50;?>% of the Vote</h3>
                 </div>
             </div>
             <div class="vote-item">
                 <div class="img-wrap">
                     <img src="images/<?php print $team2_pic; ?>">
                 </div>
-                <button class="team-vote btn btn-lg" team="<?php print $team2; ?>" opp="<?php print $team1;?>"><?php print $team2;?></button>
+                <button class="team-vote btn btn-lg btn-primary" team="<?php print $team2; ?>" opp="<?php print $team1;?>" mid="<?php print $returned_match; ?>"><?php print $team2;?></button>
                 <div class="item-info">
-                    <h3>50% of the Vote</h3>
+                    <h3><?php print 50;?>% of the Vote</h3>
                 </div>
             </div>
         </div>
         <div id="skip-wrap">
-            <button class="btn btn-default">Skip</button>
+            <button class="skip btn btn-default">Skip</button>
         </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script type="text/javascript" src=""></script>
+    <script type="text/javascript" src="js/cast-vote.js"></script>
 </body>
 </html>
